@@ -2,7 +2,7 @@
   "name": "shipandco-api",
   "description": "Shipandco API built with Feathers",
   "version": "0.0.1",
-  "main": "src/app.js",
+  "main": "src/shipandco-api.js",
   "keywords": [
     "feathers"
   ],
@@ -13,7 +13,8 @@
     "node": ">= 6.2.0"
   },
   "scripts": {
-    "start": "node ./src/shipandco-api.js"
+    "start": "node ./src/shipandco-api.js",
+    "dev": "nodemon ./src/shipandco-api.js"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
@@ -22,7 +23,6 @@
     "feathers-authentication": "^0.7.1",
     "feathers-errors": "^2.0.1",
     "feathers-hooks": "^1.5.0",
-    "feathers-memory": "^0.7.1",
     "feathers-mongoose": "^3.5.3",
     "feathers-rest": "^1.2.4",
     "mongoose": "^4.6.4",
