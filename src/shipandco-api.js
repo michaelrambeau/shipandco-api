@@ -1,3 +1,6 @@
+// Read secrets from `.env` file in local development mode
+require('dotenv').config({ silent: true })
+
 const path = require('path')
 const feathers = require('feathers')
 const rest = require('feathers-rest')
@@ -5,9 +8,6 @@ const hooks = require('feathers-hooks')
 const bodyParser = require('body-parser')
 const errorHandler = require('feathers-errors/handler')
 const mongoose = require('mongoose')
-
-// Read environment variables
-require('dotenv').load()
 
 // Application services
 const startServices = require('./services')

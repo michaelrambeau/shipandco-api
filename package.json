@@ -14,7 +14,8 @@
   },
   "scripts": {
     "start": "node ./src/shipandco-api.js",
-    "dev": "nodemon ./src/shipandco-api.js"
+    "dev": "nodemon ./src/shipandco-api.js",
+    "deploy": "now -e NODE_ENV=production -e MONGO_URL=@shipandco_dev_mongo_url -e AUTH0_SECRET=@shipandco_auth0_secret -e AUTH0_ID=@shipandco_auth0_id -e TOKEN_SECRET=@shipandco_token_secret"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
