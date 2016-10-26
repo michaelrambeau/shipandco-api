@@ -1,7 +1,19 @@
-const MongooseService = require('feathers-mongoose')
+const MongooseService = require('feathers-mongoose').Service
 const Model = require('./Order')
 
-const service = new MongooseService({
+class OrdersService extends MongooseService {
+  find (params) {
+    params.query = {
+      state: 'active',
+      $sort: {
+        date: -1
+      }
+    }
+    return super.find(params)
+  }
+}
+
+const service = new OrdersService({
   Model,
   paginate: {
     default: 50,
