@@ -7,6 +7,8 @@ const ordersService = require('./orders')
 const shipmentsService = require('./shipments')
 const shopsService = require('./shops')
 
+const hooks = require('feathers-hooks')
+
 const userEndPoint = '/admin-users'
 
 function startServices (app) {
@@ -21,6 +23,9 @@ function startServices (app) {
   app.use('/orders', ordersService)
   app.use('/shipments', shipmentsService)
   app.use('/shops', shopsService)
+
+  // hooks
+  app.service('shipments').after(hooks.remove('shipment_infos.label'))
 }
 
 module.exports = startServices

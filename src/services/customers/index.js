@@ -7,9 +7,10 @@ const Service = require('feathers-mongoose').Service
 
 class CustomerService extends Service {
   find (params) {
-    params.query = {
-      $select: ['emails', 'profile', 'carriers', 'createdAt']
-    }
+    const $select = ['emails', 'profile', 'carriers', 'createdAt']
+    params.query = Object.assign({}, params.query, {
+      $select
+    })
     return super.find(params)
       .then(result => {
         const docs = result.data

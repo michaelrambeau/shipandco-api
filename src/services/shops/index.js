@@ -3,8 +3,8 @@ const Model = require('./Shop')
 
 class ShopsService extends MongooseService {
   find (params) {
-    // params.query = {
-    // }
+    params.query = Object.assign({}, params.query, {
+    })
     return super.find(params)
   }
 }

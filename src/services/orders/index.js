@@ -3,12 +3,12 @@ const Model = require('./Order')
 
 class OrdersService extends MongooseService {
   find (params) {
-    params.query = {
+    params.query = Object.assign({}, params.query, {
       state: 'active',
       $sort: {
         date: -1
       }
-    }
+    })
     return super.find(params)
   }
 }
