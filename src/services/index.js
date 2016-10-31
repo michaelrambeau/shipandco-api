@@ -6,6 +6,7 @@ const customersService = require('./customers')
 const ordersService = require('./orders')
 const shipmentsService = require('./shipments')
 const shopsService = require('./shops')
+const dashboardService = require('./dashboard')
 
 const hooks = require('feathers-hooks')
 
@@ -23,6 +24,7 @@ function startServices (app) {
   app.use('/orders', ordersService)
   app.use('/shipments', shipmentsService)
   app.use('/shops', shopsService)
+  app.use('/dashboard', dashboardService)
 
   // hooks
   app.service('shipments').after(hooks.remove('shipment_infos.label'))
