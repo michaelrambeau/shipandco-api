@@ -14,17 +14,18 @@
   },
   "scripts": {
     "start": "node ./src/shipandco-api.js",
-    "dev": "nodemon ./src/shipandco-api.js",
+    "dev": "DEBUG=* nodemon ./src/shipandco-api.js",
     "deploy": "now -e NODE_ENV=production -e MONGO_URL=@shipandco_dev_mongo_url -e AUTH0_SECRET=@shipandco_auth0_secret -e AUTH0_ID=@shipandco_auth0_id -e TOKEN_SECRET=@shipandco_token_secret"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
+    "cookie-parser": "^1.4.3",
     "cors": "^2.8.1",
     "dotenv": "^2.0.0",
-    "feathers": "^2.0.0",
+    "feathers": "2.0.2",
     "feathers-authentication": "^0.7.1",
     "feathers-errors": "^2.0.1",
-    "feathers-hooks": "^1.5.0",
+    "feathers-hooks": "1.6.",
     "feathers-mongoose": "^3.5.3",
     "feathers-rest": "^1.2.4",
     "mongoose": "^4.6.4",

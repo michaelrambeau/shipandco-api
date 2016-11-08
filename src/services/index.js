@@ -17,7 +17,12 @@ function startServices (app) {
   adminUsersService(app, { endPoint: userEndPoint })
   // Set up our own custom redirect route for successful login
   app.get('/auth/success', function (req, res) {
-    res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'success.html'))
+    // res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'success.html'))
+    console.log(req.cookies);
+    const token = req.cookies['feathers-jwt']
+    console.log('token=', token);
+    res.cookie('feathers-jwt', token)
+    res.redirect('http://localhost:3000/')
   })
 
   app.use('/customers', customersService)
