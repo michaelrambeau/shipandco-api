@@ -25,7 +25,7 @@
     "feathers": "2.0.2",
     "feathers-authentication": "^0.7.1",
     "feathers-errors": "^2.0.1",
-    "feathers-hooks": "1.6.",
+    "feathers-hooks": "1.6.1",
     "feathers-mongoose": "^3.5.3",
     "feathers-rest": "^1.2.4",
     "mongoose": "^4.6.4",

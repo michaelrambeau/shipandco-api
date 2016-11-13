@@ -1,5 +1,3 @@
-const path = require('path')
-
 const auth0Service = require('./auth0')
 const adminUsersService = require('./adminUsers')
 const customersService = require('./customers')
@@ -7,54 +5,58 @@ const ordersService = require('./orders')
 const shipmentsService = require('./shipments')
 const shopsService = require('./shops')
 const dashboardService = require('./dashboard')
-
-const hooks = require('feathers-hooks')
+const auth = require('feathers-authentication').hooks
 
 const userEndPoint = '/admin-users'
+const WEB_CLIENT_COOKIE = 'web-client-url'
 
 function startServices (app) {
+  // Add a middleware to write in a cookie where the user comes from
+  // This cookie will be user later to redirect the user to the single-page application.
+  app.get('/auth/auth0', (req, res, next) => {
+    const { source } = req.query
+    res.cookie(WEB_CLIENT_COOKIE, source)
+    next()
+  })
+  // setup Auth0 service that will automatically create `/auth/auth0` route
   app.configure(auth0Service(userEndPoint))
+
   adminUsersService(app, { endPoint: userEndPoint })
-  // Set up our own custom redirect route for successful login
+
+  // Route called after a successful login
+  // Redirect the user to the single-page application "forwarding" the auth token
   app.get('/auth/success', function (req, res) {
-    // res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'success.html'))
-    console.log(req.cookies);
     const token = req.cookies['feathers-jwt']
-    console.log('token=', token);
     res.cookie('feathers-jwt', token, {
-      maxAge: 1000 * 10
+      maxAge: 1000 * 10 // short-term cookie (10 seconds)
     })
-    res.redirect('http://localhost:3000/')
-  })
-
-  app.get('/login/request', (req, res) => {
-    const APP_URL = 'https://shipandco.auth0.com'
-    const client_id = '3w7EXmzzpZ4dkQGQuO6yhYAIRbLrQVIb'
-    // const client_id = 'DUuPWkiKhQexHjZbpVO7b9wKMj2f7tsq'
-    const source = req.query.source
-    const redirect_uri = `/login/success?source=${source}`
-    // const auth0Client = 'eyJuYW1lIjoiYXV0aDAuanMiLCJ2ZXJzaW9uIjoiNi44LjAifQ'
-    const url = `${APP_URL}/authorize?scope=openid&response_type=token&connection=google-oauth2&sso=true&client_id=${client_id}&redirect_uri=${redirect_uri}`
-    res.redirect(url)
-  })
-  app.get('/login/callback', (req, res) => {
-    const token = req.cookies['feathers-jwt']
-    console.log('>>> token=', token);
-    res.cookie('feathers-jwt', token, {
-      maxAge: 1000 * 10
-    })
-    const url = req.query.source
+    const url = req.cookies[WEB_CLIENT_COOKIE]
     res.redirect(url)
   })
 
-  app.use('/customers', customersService)
-  app.use('/orders', ordersService)
-  app.use('/shipments', shipmentsService)
-  app.use('/shops', shopsService)
-  app.use('/dashboard', dashboardService)
+  // Register all REST services
+  const services = {
+    '/customers': customersService,
+    '/orders': ordersService,
+    'shipments': shipmentsService,
+    '/shops': shopsService,
+    '/dashboard': dashboardService
+  }
+  Object.keys(services).forEach(key => {
+    app.use(key, services[key])
+  })
 
-  // hooks
-  app.service('shipments').after(hooks.remove('shipment_infos.label'))
+  // Register common hooks to restrict access to authenticated users
+  const commonHooks = {
+    all: [
+      auth.verifyToken(),
+      auth.populateUser(),
+      auth.restrictToAuthenticated()
+    ]
+  }
+  Object.keys(services).forEach(key => {
+    app.service(key).before(commonHooks)
+  })
 }
 
 module.exports = startServices
