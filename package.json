@@ -1,7 +1,7 @@
 {
   "name": "shipandco-api",
   "description": "Shipandco API built with Feathers",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "src/shipandco-api.js",
   "keywords": [
     "feathers"
