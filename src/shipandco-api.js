@@ -18,7 +18,11 @@ const commonHooks = require('./hooks')
 
 // Database connection
 mongoose.Promise = global.Promise
-const url = process.env.MONGO_URL
+const dbEnv = process.env.DB_ENV || 'SANDBOX'
+const key = `MONGO_URL_${dbEnv.toUpperCase()}`
+const url = process.env[key]
+if (!url) throw new Error(`No env. variable '${key}'`)
+console.log('Connecting to MongoDB', key);
 mongoose.connect(url)
 
 // Initialize the application
@@ -43,7 +47,7 @@ startServices(app)
 
 app.use(errorHandler())
 
-const PORT = 3030
+const PORT = process.env.PORT || 3030
 app.listen(PORT)
 
-console.log('API server started on port', PORT)
+console.log('shipandco API started on port', PORT)
