@@ -100,7 +100,7 @@ const service = new CustomerService({
   Model: CustomerModel,
   paginate: {
     default: 20,
-    max: 100
+    max: 200
   }
   // lean: true
 })

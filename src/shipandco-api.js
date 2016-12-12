@@ -22,7 +22,7 @@ const dbEnv = process.env.DB_ENV || 'SANDBOX'
 const key = `MONGO_URL_${dbEnv.toUpperCase()}`
 const url = process.env[key]
 if (!url) throw new Error(`No env. variable '${key}'`)
-console.log('Connecting to MongoDB', key);
+console.log('Connecting to MongoDB', key)
 mongoose.connect(url)
 
 // Initialize the application
