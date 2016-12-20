@@ -1,6 +1,9 @@
 const CustomerModel = require('./Customer')
 const OrderModel = require('../orders/Order')
+
 const ShipmentModel = require('../shipments/Shipment')
+const shipmentFields = require('../shipments/fields')
+
 const ShopModel = require('../shops/Shop')
 
 const Service = require('feathers-mongoose').Service
@@ -59,17 +62,12 @@ class CustomerService extends Service {
       .find({ userId: id })
       .limit(50)
       .sort({ date: -1 })
-      .select({
-        customer_name: 1,
-        shipping_address: 1,
-        identifier: 1,
-        date: 1,
-        currency: 1,
-        shipping_paid: 1,
-        declared_value: 1,
-        'shipment_infos.carrier': 1,
-        'shipment_infos.tracking_number': 1
-      })
+      .select(shipmentFields.reduce(
+        (acc, field) => Object.assign({}, acc, {
+          [field]: 1
+        }),
+        {}
+      ))
     const getShopList = () => ShopModel
       .find({ userId: id })
       .limit(50)
