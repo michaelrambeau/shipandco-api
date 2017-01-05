@@ -13,7 +13,9 @@ Services:
 Environment variables defined in `.env` file:
 
 ```
-MONGO_URL=mongodb://***:***@ds*****.mlab.com:*****/*****
+MONGO_URL_SANDBOX=mongodb://***
+MONGO_URL_PRODUCTION=mongodb://***
+MONGO_URL_ADMIN_USERS=mongodb://***
 AUTH0_SECRET=****************************************************************
 AUTH0_ID=********************************
 TOKEN_SECRET=***
@@ -23,10 +25,10 @@ TOKEN_SECRET=***
 
 ### Development
 
-Start the server:
+Start the application, connecting to the production database:
 
 ```
-npm start
+DB_ENV=production npm start
 ```
 
 ### Deploy
@@ -37,6 +39,10 @@ Before the first deploy from your computer, you need to set up now `secrets` (cr
 
 ```
 now secrets add shipandco_dev_mongo_url ***
+```
+
+```
+now secrets add shipandco_admin_mongo_url ***
 ```
 
 ```

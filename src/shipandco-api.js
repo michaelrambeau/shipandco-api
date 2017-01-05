@@ -25,6 +25,10 @@ if (!url) throw new Error(`No env. variable '${key}'`)
 console.log('Connecting to MongoDB', key)
 mongoose.connect(url)
 
+const dbAdminUserUrl = process.env.MONGO_URL_ADMIN_USERS
+if (!dbAdminUserUrl) throw new Error('No Admin user database specified!')
+const dbAdminUserConnection = mongoose.createConnection(dbAdminUserUrl)
+
 // Initialize the application
 const app = feathers()
   .configure(rest())
@@ -41,7 +45,9 @@ const app = feathers()
 //   service.before(commonHooks().before)
 // })
 
-startServices(app)
+startServices(app, {
+  dbAdminUserConnection
+})
 
 // app.before(commonHooks.before)
 

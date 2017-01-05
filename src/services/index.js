@@ -11,7 +11,7 @@ const path = require('path')
 const userEndPoint = '/admin-users'
 const WEB_CLIENT_COOKIE = 'web-client-url'
 
-function startServices (app) {
+function startServices (app, { dbAdminUserConnection }) {
   // Add a middleware to write in a cookie where the user comes from
   // This cookie will be user later to redirect the user to the single-page application.
   app.get('/auth/auth0', (req, res, next) => {
@@ -26,7 +26,10 @@ function startServices (app) {
   // setup Auth0 service that will automatically create `/auth/auth0` route
   app.configure(auth0Service(userEndPoint))
 
-  adminUsersService(app, { endPoint: userEndPoint })
+  adminUsersService(app, {
+    endPoint: userEndPoint,
+    dbAdminUserConnection
+  })
 
   // Route called after a successful login
   // Redirect the user to the single-page application "forwarding" the auth token

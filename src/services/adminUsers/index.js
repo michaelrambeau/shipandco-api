@@ -8,9 +8,8 @@ const schema = new Schema(fields, {
   collection: 'adminUsers'
 })
 
-const Model = mongoose.model('AdminUser', schema)
-
-function createService (app, { endPoint }) {
+function createService (app, { endPoint, dbAdminUserConnection }) {
+  const Model = dbAdminUserConnection.model('AdminUser', schema)
   const service = mongooseService({
     Model,
     paginate: {
