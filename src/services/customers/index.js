@@ -42,12 +42,15 @@ class CustomerService extends Service {
       .select({ signature: 0 })
       .lean()
     const getOrderCount = () => OrderModel
-      .count({ userId: id })
+      .count({
+        userId: id,
+        status: 'active'
+      })
     const getShipmentCount = () => ShipmentModel
       .count({ userId: id })
     const getOrderList = () => OrderModel
       .find({ userId: id, state: 'active' })
-      .limit(50)
+      .limit(100)
       .sort({ date: -1 })
       .select({
         date: 1,
