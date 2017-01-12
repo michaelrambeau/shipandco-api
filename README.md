@@ -31,6 +31,14 @@ Start the application, connecting to the production database:
 DB_ENV=production npm start
 ```
 
+### Production
+
+Start the production "daemon" (will automatically restart if the server crashes, using `forever` package)
+
+```
+npm run production
+```
+
 ### Deploy
 
 #### Initial setup
