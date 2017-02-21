@@ -44,7 +44,7 @@ class CustomerService extends Service {
     const getOrderCount = () => OrderModel
       .count({
         userId: id,
-        status: 'active'
+        state: 'active'
       })
     const getShipmentCount = () => ShipmentModel
       .count({ userId: id })
