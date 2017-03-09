@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "node ./src/shipandco-api.js",
-    "production": "DB_ENV=production forever start ./src/shipandco-api.js",
+    "production": "DB_ENV=production forever start ./src/shipandco-api.js -l forever-log.txt",
     "stop": "forever stopall",
     "list": "forever list",
     "dev": "DEBUG=* nodemon ./src/shipandco-api.js",
