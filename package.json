@@ -33,6 +33,7 @@
     "feathers-mongoose": "^3.5.3",
     "feathers-rest": "^1.2.4",
     "forever": "^0.15.3",
+    "lodash.get": "^4.4.2",
     "mongoose": "^4.6.4",
     "passport-auth0": "^0.5.1"
   },

@@ -8,9 +8,19 @@ const ShopModel = require('../shops/Shop')
 
 const Service = require('feathers-mongoose').Service
 
+// Return customer's data when calling `find` method to display the list of customers
+function sendUser (user, shops) {
+  const json = Object.assign({}, user.toObject(), {
+    lastLogin: user.lastLogin, // add `lastLogin` virtual property (see the model)
+    shops: shops.filter(shop => shop.userId === user._id)
+  })
+  delete json.services // remove unnessary data from the json response
+  return json
+}
+
 class CustomerService extends Service {
   find (params) {
-    const $select = ['emails', 'profile', 'carriers', 'createdAt']
+    const $select = ['emails', 'profile', 'carriers', 'createdAt', 'services'] // `services` is required to get access to lastLogin
     params.query = Object.assign({}, params.query, {
       $select
     })
@@ -26,13 +36,10 @@ class CustomerService extends Service {
           })
           .select({ name: 1, type: 1, userId: 1, created_at: 1, lastSync: 1 })
           .then(shops => {
-            return Object.assign({}, result, {
-              // data: result.data.map(user => Object.assign({}, user.toObject()))
-              data: result.data.map(user => Object.assign({}, user.toObject(), {
-                shops: shops.filter(shop => shop.userId === user._id)
-                // shops: []
-              }))
+            const json = Object.assign({}, result, {
+              data: result.data.map(user => sendUser(user, shops))
             })
+            return json
           })
       })
   }
@@ -101,7 +108,7 @@ const service = new CustomerService({
   Model: CustomerModel,
   paginate: {
     default: 20,
-    max: 200
+    max: 1000
   }
   // lean: true
 })
