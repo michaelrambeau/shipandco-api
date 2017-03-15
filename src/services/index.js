@@ -5,6 +5,8 @@ const ordersService = require('./orders')
 const shipmentsService = require('./shipments')
 const shopsService = require('./shops')
 const dashboardService = require('./dashboard')
+const checkSyncService = require('./check-sync')
+
 const auth = require('feathers-authentication').hooks
 const path = require('path')
 
@@ -58,6 +60,8 @@ function startServices (app, { dbAdminUserConnection }) {
     app.use(key, services[key])
   })
 
+  app.use('/check-sync', checkBatchToken, checkSyncService)
+
   // Register common hooks to restrict access to authenticated users
   const commonHooks = {
     all: [
@@ -69,6 +73,13 @@ function startServices (app, { dbAdminUserConnection }) {
   Object.keys(services).forEach(key => {
     app.service(key).before(commonHooks)
   })
+}
+
+function checkBatchToken (req, res, next) {
+  const requestToken = req.headers.authorization
+  const batchToken = process.env.BATCH_TOKEN
+  if (requestToken !== batchToken) return res.status(401).json({ msg: 'Auth error!' })
+  next()
 }
 
 module.exports = startServices
