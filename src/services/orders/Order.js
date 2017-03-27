@@ -3,7 +3,9 @@ const Schema = mongoose.Schema
 
 const fields = {
   _id: String,
-  customerName: { type: String, required: true }
+  customerName: { type: String, required: true },
+  shipmentId: String,
+  state: String
 }
 
 const ordersSchema = new Schema(fields, {
