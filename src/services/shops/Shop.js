@@ -8,6 +8,7 @@ const fields = {
   name: String,
   created_at: Date,
   lastSync: Date,
+  settings: Object,
   userId: {
     type: String,
     ref: 'Customer'

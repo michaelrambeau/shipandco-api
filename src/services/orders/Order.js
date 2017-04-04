@@ -5,7 +5,8 @@ const fields = {
   _id: String,
   customerName: { type: String, required: true },
   shipmentId: String,
-  state: String
+  state: String,
+  shopId: String
 }
 
 const ordersSchema = new Schema(fields, {
