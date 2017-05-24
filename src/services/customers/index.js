@@ -83,16 +83,21 @@ class CustomerService extends Service {
       .limit(50)
       .sort({ date: -1 })
       .select({ name: 1, type: 1, created_at: 1, lastSync: 1 })
-    return Promise.all([
+    const fetchBasicData = [
       getUser(),
+      getShopList()
+    ]
+    const onlyBasicData = params.options && params.options.basic
+    const fetchAdvancedData = [
       getOrderCount(),
       getOrderList(),
       getShipmentCount(),
-      getShipmentList(),
-      getShopList()
-    ])
+      getShipmentList()
+    ]
+    const promises = fetchBasicData.concat(onlyBasicData ? [] : fetchAdvancedData)
+    return Promise.all(promises)
       .then(result => {
-        const [user, orderCount, orders, shipmentCount, shipments, shops] = result
+        const [user, shops, orderCount, orders, shipmentCount, shipments] = result
         return Object.assign({}, user, {
           orderCount,
           orders,

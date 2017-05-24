@@ -11,9 +11,9 @@ class ShopsService extends MongooseService {
     return super.find(params)
   }
   get (id, params) {
-    const getCustomer = shopId => CustomerService.get(shopId)
-    const getOrders = shopId => OrdersService.find({ query: { shopId } })
-    const getShipments = shopId => ShipmentsService.find({ query: { shopId } })
+    const getCustomer = userId => CustomerService.get(userId, { basic: true })
+    const getOrders = shopId => OrdersService.find({ query: { shopId, $limit: 10 } })
+    const getShipments = shopId => ShipmentsService.find({ query: { shopId, $limit: 10 } })
     return super.get(id, params)
       .then(shop => {
         const promises = [
