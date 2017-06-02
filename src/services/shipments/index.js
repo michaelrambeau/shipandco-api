@@ -5,10 +5,29 @@ const fields = require('./fields')
 class ShipmentsService extends MongooseService {
   find (params) {
     const $select = fields
-    params.query = Object.assign({}, params.query, {
+    const defaultOptions = { $sort: '-date' };
+    const query = Object.assign({}, defaultOptions, params.query, {
       $select
     })
-    return super.find(params)
+    const updatedParams = Object.assign({}, params, {
+      query
+    })
+    const fieldHashMap = fields.reduce(
+        (acc, field) => Object.assign({}, acc, {
+          [field]: 1
+        }),
+        {}
+      )
+    console.log('Fields', fieldHashMap)
+    // return Model
+      // .count({ userId: params.query.userId })
+    return super.find(updatedParams)
+    // return Model
+    //   .find({ userId: params.query.userId })
+    //   .sort(params.query.$sort)
+    //   .skip(parseInt(params.query.$skip))
+    //   .limit(parseInt(params.query.$limit))
+    //   .select(fieldHashMap)
   }
   get (id, params) {
     return Model.findOne({_id: id}).select({ 'shipment_infos.label': 0 })

@@ -11,6 +11,7 @@ class ShopsService extends MongooseService {
     return super.find(params)
   }
   get (id, params) {
+    console.log('Get', params)
     const getCustomer = userId => CustomerService.get(userId, { basic: true })
     const getOrders = shopId => OrdersService.find({ query: { shopId, $limit: 10 } })
     const getShipments = shopId => ShipmentsService.find({ query: { shopId, $limit: 10 } })
@@ -21,8 +22,9 @@ class ShopsService extends MongooseService {
           getOrders(shop._id),
           getShipments(shop._id)
         ]
+        console.log('Fetching all data...')
         return Promise.all(promises)
-          .then(([user, orders, shipments]) => Object.assign({}, shop.toObject(), {
+          .then(([user, orders, shipments]) => Object.assign({}, shop, {
             user,
             orders,
             shipments

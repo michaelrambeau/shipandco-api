@@ -10,7 +10,7 @@ const Service = require('feathers-mongoose').Service
 
 // Return customer's data when calling `find` method to display the list of customers
 function sendUser (user, shops) {
-  const json = Object.assign({}, user.toObject(), {
+  const json = Object.assign({}, user, {
     lastLogin: user.lastLogin, // add `lastLogin` virtual property (see the model)
     shops: shops.filter(shop => shop.userId === user._id)
   })
