@@ -34,7 +34,7 @@
     "feathers-rest": "1.7.2",
     "forever": "^0.15.3",
     "lodash.get": "^4.4.2",
-    "mongoose": "^4.6.4",
+    "mongoose": "4.10.4",
     "passport-auth0": "^0.5.1"
   },
   "devDependencies": {}
