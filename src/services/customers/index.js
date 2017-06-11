@@ -23,7 +23,7 @@ function sendUser (user, shops) {
 
 class CustomerService extends Service {
   find (params) {
-    const $select = ['emails', 'profile', 'carriers', 'createdAt', 'services'] // `services` is required to get access to lastLogin
+    const $select = ['emails', 'profile', 'carriers', 'createdAt', 'services', 'freeShipments'] // `services` is required to get access to lastLogin
     params.query = Object.assign({}, params.query, {
       $select
     })
@@ -105,6 +105,7 @@ class CustomerService extends Service {
       .then(result => {
         const [user, shops, orderCount, orders, shipmentCount, shipments, warehouses] = result
         return Object.assign({}, user, {
+          lastLogin: helpers.getLastLogin(user),
           orderCount,
           orders,
           shipmentCount,
