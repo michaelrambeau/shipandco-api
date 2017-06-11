@@ -24,18 +24,49 @@ function findByUser (query) {
     .hint({ userId: 1, date: -1 })
   return Promise.all([getShipments, getTotal])
     .then(([shipments, total]) => ({
-      data: shipments,
       limit,
       skip,
       total,
-      custom: true
+      custom: true,
+      data: shipments
+    }))
+}
+
+function findByCarrier (query) {
+  const { $skip, $limit } = query
+  const key = 'shipment_infos.carrier'
+  const carrier = query[key]
+  const limit = parseInt($limit)
+  const skip = parseInt($skip)
+  const fieldHashMap = fields.reduce(
+    (acc, field) => Object.assign({}, acc, {
+      [field]: 1
+    }),
+    {}
+  )
+  const getShipments = Model
+    .find({ [key]: carrier })
+    .sort('-date')
+    .skip(skip)
+    .limit(limit)
+    .select(fieldHashMap)
+  const getTotal = Model
+    .count({ [key]: carrier })
+    .hint({ [key]: 1, date: -1 })
+  return Promise.all([getShipments, getTotal])
+    .then(([shipments, total]) => ({
+      limit,
+      skip,
+      total,
+      custom: true,
+      data: shipments
     }))
 }
 
 class ShipmentsService extends MongooseService {
   find (params) {
     const $select = fields
-    const defaultOptions = { $sort: '-date' };
+    const defaultOptions = { $sort: '-date' }
     const query = Object.assign({}, defaultOptions, params.query, {
       $select
     })
@@ -44,6 +75,9 @@ class ShipmentsService extends MongooseService {
     })
     if (params.query.userId) {
       return findByUser(query)
+    }
+    if (params.query['shipment_infos.carrier']) {
+      return findByCarrier(query)
     }
     return super.find(updatedParams)
   }

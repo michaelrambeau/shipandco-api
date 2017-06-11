@@ -5,6 +5,7 @@ const ShipmentModel = require('../shipments/Shipment')
 const shipmentFields = require('../shipments/fields')
 
 const ShopModel = require('../shops/Shop')
+const WarehouseModel = require('../warehouses/Warehouse')
 
 const Service = require('feathers-mongoose').Service
 
@@ -83,6 +84,8 @@ class CustomerService extends Service {
       .limit(50)
       .sort({ date: -1 })
       .select({ name: 1, type: 1, created_at: 1, lastSync: 1 })
+    const getWarehouseList = () => WarehouseModel
+      .find({ userId: id })
     const fetchBasicData = [
       getUser(),
       getShopList()
@@ -92,18 +95,20 @@ class CustomerService extends Service {
       getOrderCount(),
       getOrderList(),
       getShipmentCount(),
-      getShipmentList()
+      getShipmentList(),
+      getWarehouseList()
     ]
     const promises = fetchBasicData.concat(onlyBasicData ? [] : fetchAdvancedData)
     return Promise.all(promises)
       .then(result => {
-        const [user, shops, orderCount, orders, shipmentCount, shipments] = result
+        const [user, shops, orderCount, orders, shipmentCount, shipments, warehouses] = result
         return Object.assign({}, user, {
           orderCount,
           orders,
           shipmentCount,
           shipments,
-          shops
+          shops,
+          warehouses
         })
       })
   }

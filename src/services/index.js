@@ -4,6 +4,7 @@ const customersService = require('./customers')
 const ordersService = require('./orders')
 const shipmentsService = require('./shipments')
 const shopsService = require('./shops')
+const warehousesService = require('./warehouses')
 const dashboardService = require('./dashboard')
 const checkSyncService = require('./check-sync')
 
@@ -54,7 +55,8 @@ function startServices (app, { dbAdminUserConnection }) {
     '/orders': ordersService,
     'shipments': shipmentsService,
     '/shops': shopsService,
-    '/dashboard': dashboardService
+    '/dashboard': dashboardService,
+    '/warehouses': warehousesService
   }
   Object.keys(services).forEach(key => {
     app.use(key, services[key])

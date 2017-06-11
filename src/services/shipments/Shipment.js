@@ -6,10 +6,12 @@ const fields = {
   customer_name: { type: String, required: true }
 }
 
-const ordersSchema = new Schema(fields, {
+const schema = new Schema(fields, {
   collection: 'shipments'
 })
 
-const model = mongoose.model('Shipment', ordersSchema)
+schema.index({ 'shipment_infos.carrier': 1, date: -1 })
+
+const model = mongoose.model('Shipment', schema)
 
 module.exports = model
