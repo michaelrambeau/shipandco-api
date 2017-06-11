@@ -9,10 +9,12 @@ const WarehouseModel = require('../warehouses/Warehouse')
 
 const Service = require('feathers-mongoose').Service
 
+const helpers = require('./helpers')
+
 // Return customer's data when calling `find` method to display the list of customers
 function sendUser (user, shops) {
   const json = Object.assign({}, user, {
-    lastLogin: user.lastLogin, // add `lastLogin` virtual property (see the model)
+    lastLogin: helpers.getLastLogin(user),
     shops: shops.filter(shop => shop.userId === user._id)
   })
   delete json.services // remove unnessary data from the json response
@@ -119,8 +121,8 @@ const service = new CustomerService({
   paginate: {
     default: 20,
     max: 1000
-  }
-  // lean: true
+  },
+  lean: true
 })
 
 module.exports = service
