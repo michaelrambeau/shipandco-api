@@ -14,7 +14,7 @@ const shopTypes = [
 ]
 
 class CheckSyncService {
-  find (params) {
+  find(params) {
     const query = {
       type: {
         $in: shopTypes
@@ -30,23 +30,17 @@ class CheckSyncService {
   }
 }
 
-function processShops (shops) {
+function processShops(shops) {
   const now = new Date()
-  const minutesFromNow = (date) => parseInt((now - date) / 1000 / 60)
-  const lastSyncByShopType = shops.reduce(
-    (acc, shop) => {
-      const { lastSync, type } = shop
-      const last = minutesFromNow(lastSync)
-      const oldest = acc[type] ? (
-        Math.max(last, acc[type])
-      ) : (
-        last
-      )
-      return Object.assign({}, acc, {
-        [type]: oldest
-      })
-    },
-    {})
+  const minutesFromNow = date => parseInt((now - date) / 1000 / 60)
+  const lastSyncByShopType = shops.reduce((acc, shop) => {
+    const { lastSync, type } = shop
+    const last = minutesFromNow(lastSync)
+    const oldest = acc[type] ? Math.max(last, acc[type]) : last
+    return Object.assign({}, acc, {
+      [type]: oldest
+    })
+  }, {})
   return lastSyncByShopType
 }
 

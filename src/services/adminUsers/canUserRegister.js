@@ -21,15 +21,16 @@ Example of `data` object:
 
 const EMAIL_DOMAIN = 'bentoandco.com'
 
-module.exports = function canUserRegister (hooks) {
+module.exports = function canUserRegister(hooks) {
   const { data } = hooks
   const { email, name } = data.auth0
-  console.log('Checking', email, name);
-  if (!isValidEmailAddress(email)) throw new Error(`Only ${EMAIL_DOMAIN} users can access this application!`)
+  console.log('Checking', email, name)
+  if (!isValidEmailAddress(email))
+    throw new Error(`Only ${EMAIL_DOMAIN} users can access this application!`)
   console.log('Access allowed', name, email)
 }
 
-function isValidEmailAddress (email) {
+function isValidEmailAddress(email) {
   const re = new RegExp(`@${EMAIL_DOMAIN}`)
   return re.test(email)
 }

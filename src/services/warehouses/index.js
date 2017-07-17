@@ -2,10 +2,10 @@ const MongooseService = require('feathers-mongoose').Service
 const Model = require('./Warehouse')
 
 class WarehousesService extends MongooseService {
-  find (params) {
+  find(params) {
     return super.find(params)
   }
-  get (id, params) {
+  get(id, params) {
     return super.get(id, params)
   }
 }

@@ -14,15 +14,19 @@ const fields = {
       ref: 'Order'
     }
   ],
-  shops: [{
-    type: String,
-    ref: 'Shop'
-  }],
+  shops: [
+    {
+      type: String,
+      ref: 'Shop'
+    }
+  ],
   services: {
     resume: {
-      loginTokens: [{
-        when: Date
-      }]
+      loginTokens: [
+        {
+          when: Date
+        }
+      ]
     }
   }
 }

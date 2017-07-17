@@ -14,7 +14,7 @@ const path = require('path')
 const userEndPoint = '/admin-users'
 const WEB_CLIENT_COOKIE = 'web-client-url'
 
-function startServices (app, { dbAdminUserConnection }) {
+function startServices(app, { dbAdminUserConnection }) {
   // Add a middleware to write in a cookie where the user comes from
   // This cookie will be user later to redirect the user to the single-page application.
   app.get('/auth/auth0', (req, res, next) => {
@@ -53,7 +53,7 @@ function startServices (app, { dbAdminUserConnection }) {
   const services = {
     '/customers': customersService,
     '/orders': ordersService,
-    'shipments': shipmentsService,
+    shipments: shipmentsService,
     '/shops': shopsService,
     '/dashboard': dashboardService,
     '/warehouses': warehousesService
@@ -77,10 +77,11 @@ function startServices (app, { dbAdminUserConnection }) {
   })
 }
 
-function checkBatchToken (req, res, next) {
+function checkBatchToken(req, res, next) {
   const requestToken = req.headers.authorization
   const batchToken = process.env.BATCH_TOKEN
-  if (requestToken !== batchToken) return res.status(401).json({ msg: 'Auth error!' })
+  if (requestToken !== batchToken)
+    return res.status(401).json({ msg: 'Auth error!' })
   next()
 }
 

@@ -4,7 +4,7 @@ const Model = require('./Order')
 const PAGINATION_MAX = 100
 
 class OrdersService extends MongooseService {
-  find (params) {
+  find(params) {
     params.query = Object.assign({}, params.query, {
       state: 'active',
       $sort: {

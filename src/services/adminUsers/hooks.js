@@ -1,4 +1,3 @@
-
 const hooks = require('feathers-hooks')
 const auth = require('feathers-authentication').hooks
 
@@ -21,10 +20,7 @@ exports.before = {
     auth.restrictToAuthenticated(),
     auth.restrictToOwner({ ownerField: '_id' })
   ],
-  create: [
-    auth.hashPassword(),
-    canUserRegister
-  ],
+  create: [auth.hashPassword(), canUserRegister],
   update: [
     auth.verifyToken(),
     auth.populateUser(),

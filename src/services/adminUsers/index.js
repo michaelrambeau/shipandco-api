@@ -8,7 +8,7 @@ const schema = new Schema(fields, {
   collection: 'adminUsers'
 })
 
-function createService (app, { endPoint, dbAdminUserConnection }) {
+function createService(app, { endPoint, dbAdminUserConnection }) {
   const Model = dbAdminUserConnection.model('AdminUser', schema)
   const service = mongooseService({
     Model,

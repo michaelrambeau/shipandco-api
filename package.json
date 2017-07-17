@@ -3,9 +3,7 @@
   "description": "Shipandco API built with Feathers",
   "version": "0.1.0",
   "main": "src/shipandco-api.js",
-  "keywords": [
-    "feathers"
-  ],
+  "keywords": ["feathers"],
   "license": "MIT",
   "repository": {},
   "author": "Michael Rambeau",
@@ -35,7 +33,17 @@
     "forever": "^0.15.3",
     "lodash.get": "^4.4.2",
     "mongoose": "4.10.4",
-    "passport-auth0": "^0.5.1"
+    "passport-auth0": "^0.5.1",
+    "stripe": "^4.23.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "babel-eslint": "^7.2.3",
+    "eslint": "3.14.1",
+    "eslint-config-prettier": "^2.3.0",
+    "eslint-plugin-babel": "^3.3.0",
+    "eslint-plugin-import": "^2.0.0",
+    "eslint-plugin-prettier": "^2.1.2",
+    "eslint-plugin-promise": "^2.0.1",
+    "prettier": "^1.5.3"
+  }
 }
