@@ -7,6 +7,7 @@ const shopsService = require('./shops')
 const warehousesService = require('./warehouses')
 const dashboardService = require('./dashboard')
 const checkSyncService = require('./check-sync')
+const paymentsService = require('./payments')
 
 const auth = require('feathers-authentication').hooks
 const path = require('path')
@@ -56,7 +57,8 @@ function startServices(app, { dbAdminUserConnection }) {
     shipments: shipmentsService,
     '/shops': shopsService,
     '/dashboard': dashboardService,
-    '/warehouses': warehousesService
+    '/warehouses': warehousesService,
+    '/payments': paymentsService
   }
   Object.keys(services).forEach(key => {
     app.use(key, services[key])
