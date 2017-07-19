@@ -8,6 +8,7 @@ const warehousesService = require('./warehouses')
 const dashboardService = require('./dashboard')
 const checkSyncService = require('./check-sync')
 const paymentsService = require('./payments')
+const statsService = require('./stats')
 
 const auth = require('feathers-authentication').hooks
 const path = require('path')
@@ -65,6 +66,7 @@ function startServices(app, { dbAdminUserConnection }) {
   })
 
   app.use('/check-sync', checkBatchToken, checkSyncService)
+  app.use('/stats', statsService)
 
   // Register common hooks to restrict access to authenticated users
   const commonHooks = {

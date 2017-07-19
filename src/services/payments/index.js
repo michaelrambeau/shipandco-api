@@ -3,7 +3,7 @@ const Stripe = require('stripe')
 const token = process.env.STRIPE_TOKEN_PRODUCTION
 const stripe = Stripe(token)
 
-class DashboardService {
+class PaymentService {
   find(params) {
     const { limit, customer } = params.query
     const options = {
@@ -20,6 +20,6 @@ class DashboardService {
   }
 }
 
-const service = new DashboardService()
+const service = new PaymentService()
 
 module.exports = service

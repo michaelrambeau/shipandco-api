@@ -3,6 +3,7 @@ const Schema = mongoose.Schema
 
 const fields = {
   _id: String,
+  date: Date,
   customer_name: { type: String, required: true }
 }
 

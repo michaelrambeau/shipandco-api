@@ -29,7 +29,8 @@ class CustomerService extends Service {
       'carriers',
       'createdAt',
       'services',
-      'freeShipments'
+      'freeShipments',
+      'billing.stripeCustomer.id'
     ] // `services` is required to get access to lastLogin
     params.query = Object.assign({}, params.query, {
       $select

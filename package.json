@@ -3,7 +3,9 @@
   "description": "Shipandco API built with Feathers",
   "version": "0.1.0",
   "main": "src/shipandco-api.js",
-  "keywords": ["feathers"],
+  "keywords": [
+    "feathers"
+  ],
   "license": "MIT",
   "repository": {},
   "author": "Michael Rambeau",
@@ -31,6 +33,7 @@
     "feathers-mongoose": "5.1.0",
     "feathers-rest": "1.7.2",
     "forever": "^0.15.3",
+    "fs-extra": "^4.0.0",
     "lodash.get": "^4.4.2",
     "mongoose": "4.10.4",
     "passport-auth0": "^0.5.1",
