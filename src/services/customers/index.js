@@ -1,3 +1,5 @@
+const debug = require('debug')('api')
+
 const CustomerModel = require('./Customer')
 const OrderModel = require('../orders/Order')
 
@@ -23,6 +25,7 @@ function sendUser(user, shops) {
 
 class CustomerService extends Service {
   find(params) {
+    debug(params)
     const $select = [
       'emails',
       'profile',

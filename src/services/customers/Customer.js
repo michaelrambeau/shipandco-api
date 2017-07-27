@@ -28,6 +28,12 @@ const fields = {
         }
       ]
     }
+  },
+  settings: {
+    defaultWarehouse: {
+      type: Schema.Types.ObjectId,
+      ref: 'Warehouse'
+    }
   }
 }
 
