@@ -15,7 +15,7 @@
     "production": "DB_ENV=production forever start ./src/shipandco-api.js -l forever-log.txt",
     "stop": "forever stopall",
     "list": "forever list",
-    "dev": "DEBUG=api nodemon ./src/shipandco-api.js",
+    "dev": "DEBUG=api nodemon ./src/shipandco-api.js --watch src/",
     "deploy": "now -e NODE_ENV=production -e MONGO_URL=@shipandco_dev_mongo_url -e AUTH0_SECRET=@shipandco_auth0_secret -e AUTH0_ID=@shipandco_auth0_id -e TOKEN_SECRET=@shipandco_token_secret",
     "deploy:prod": "now -e NODE_ENV=production -e DB_ENV=production -e MONGO_URL_PRODUCTION=@shipandco_prod_mongo_url -e MONGO_URL_ADMIN_USERS=@shipandco_admin_mongo_url -e AUTH0_SECRET=@shipandco_auth0_secret -e AUTH0_ID=@shipandco_auth0_id -e TOKEN_SECRET=@shipandco_token_secret"
   },
@@ -33,7 +33,10 @@
     "forever": "^0.15.3",
     "fs-extra": "^4.0.0",
     "lodash.get": "^4.4.2",
+    "lodash.mapvalues": "^4.6.0",
     "mongoose": "4.10.4",
+    "p-map": "^1.1.1",
+    "p-props": "^1.0.0",
     "passport-auth0": "^0.5.1",
     "stripe": "^4.23.1"
   },

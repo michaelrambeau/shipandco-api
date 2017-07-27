@@ -1,24 +1,42 @@
+const debug = require('debug')('api')
+const mapValues = require('lodash.mapvalues')
+const pProps = require('p-props')
 const ShipmentModel = require('../shipments/Shipment')
 const topUsers = require('./top-users')
 const byMonth = require('./shipments-by-month')
 const build = require('./build-json')
 const read = require('./read-json')
 
-const buildTopUsers = () =>
-  topUsers(ShipmentModel).then(build('top-users.json'))
-const buildShipmentsByMonth = () =>
-  byMonth(ShipmentModel).then(build('by-month.json'))
+const getTopUsers = () => topUsers(ShipmentModel)
+const getShipmentsByMonth = () => byMonth(ShipmentModel)
 
-const requests = {
-  'top-users': buildTopUsers
+const settings = {
+  topUsers: {
+    fetchItems: getTopUsers,
+    filename: 'top-users.json'
+  },
+  shipmentsByMonth: {
+    fetchItems: getShipmentsByMonth,
+    filename: 'by-month.json'
+  }
+}
+
+const readItems = key => read(settings[key].filename)
+const writeItems = key => {
+  const requestSettings = settings[key]
+  const { fetchItems, filename } = requestSettings
+  debug('Feching aggregated data', key)
+  return fetchItems().then(build(filename))
 }
 
 class StatsService {
   find(params) {
-    return read('top-users.json').then(users => ({ topUsers: users }))
+    const requests = mapValues(settings, (setting, key) => readItems(key))
+    return pProps(requests)
   }
   create(data, params) {
-    return buildShipmentsByMonth().then(() => ({ status: 'OK' }))
+    const requests = mapValues(settings, (setting, key) => writeItems(key))
+    return pProps(requests)
   }
 }
 
