@@ -1,7 +1,7 @@
 const debug = require('debug')('api')
 const CustomerModel = require('../customers/Customer')
 const helpers = require('../customers/helpers')
-const Stats = require('../Stats')
+const Stats = require('../stats')
 
 class AddressService {
   find(params) {
