@@ -5,6 +5,8 @@ const ShopModel = require('../shops/Shop')
 const StatsService = require('../stats')
 const ShipmentService = require('../shipments')
 
+const last12month = shipment => new Date(shipment.date) > new Date(2017, 0, 1)
+
 class DashboardService {
   find(params) {
     const getOrderCount = () => OrderModel.count()
@@ -25,7 +27,7 @@ class DashboardService {
       getLast10shipments()
     ]).then(results => {
       const [orders, shipments, users, shops, stats, lastShipments] = results
-      const { topUsers } = stats
+      const { topUsers, shipmentsByMonth } = stats
       return {
         counters: {
           orders,
@@ -34,7 +36,8 @@ class DashboardService {
           shops
         },
         topUsers,
-        lastShipments: lastShipments.data
+        lastShipments: lastShipments.data,
+        shipmentsByMonth: shipmentsByMonth.filter(last12month)
       }
     })
   }
