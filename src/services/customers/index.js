@@ -88,10 +88,13 @@ class CustomerService extends Service {
         )
       )
     const getShopList = () =>
-      ShopModel.find({ userId: id })
-        .limit(50)
-        .sort({ date: -1 })
-        .select({ name: 1, type: 1, created_at: 1, lastSync: 1 })
+      ShopModel.find({ userId: id }).limit(50).sort({ date: -1 }).select({
+        name: 1,
+        type: 1,
+        created_at: 1,
+        lastSync: 1,
+        'settings.autofulfill': 1
+      })
     const getWarehouseList = () => WarehouseModel.find({ userId: id })
     const fetchBasicData = [getUser(), getShopList()]
     const onlyBasicData = params.options && params.options.basic
