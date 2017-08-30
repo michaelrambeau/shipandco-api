@@ -7,7 +7,7 @@ const shopsService = require('./shops')
 const warehousesService = require('./warehouses')
 const dashboardService = require('./dashboard')
 const checkSyncService = require('./check-sync')
-const paymentsService = require('./payments')
+const createBillingService = require('./payments')
 const statsService = require('./stats')
 const addressesService = require('./addresses')
 
@@ -52,6 +52,10 @@ function startServices(app, { dbAdminUserConnection }) {
     }
   })
 
+  const dbEnv = process.env.DB_ENV || 'SANDBOX'
+  const token = process.env[`STRIPE_TOKEN_${dbEnv.toUpperCase()}`]
+  const billingService = createBillingService(token)
+
   // Register all REST services
   const services = {
     '/customers': customersService,
@@ -60,7 +64,7 @@ function startServices(app, { dbAdminUserConnection }) {
     '/shops': shopsService,
     '/dashboard': dashboardService,
     '/warehouses': warehousesService,
-    '/payments': paymentsService,
+    '/payments': billingService,
     '/addresses': addressesService
   }
   Object.keys(services).forEach(key => {

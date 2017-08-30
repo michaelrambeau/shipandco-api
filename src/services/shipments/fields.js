@@ -14,7 +14,8 @@ const fields = [
   'shipment_infos.service',
   'shipment_infos.method',
   'state',
-  'label'
+  'label',
+  'meta'
 ]
 
 module.exports = fields
