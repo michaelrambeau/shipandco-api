@@ -7,6 +7,7 @@ const fields = {
   type: String,
   name: String,
   created_at: Date,
+  tokenExpiration: Date,
   lastSync: Date,
   settings: Object,
   userId: {
