@@ -13,11 +13,10 @@ const shopTypes = [
   'rakuten'
 ]
 
+// Exclude shops whose token is no more valid!
 const enabledRules = {
   ebay: (shop) => {
     const now = new Date()
-    console.log('shop', shop.tokenExpiration, shop.name)
-    
     return shop.tokenExpiration > now
   }
 }
@@ -32,7 +31,8 @@ class CheckSyncService {
     const query = {
       type: {
         $in: shopTypes
-      }
+      },
+      state: { $nin: ['pending'] }
     }
     return Shop.find(query)
       .select({ name: 1, type: 1, lastSync: 1, tokenExpiration: 1 })
@@ -42,7 +42,7 @@ class CheckSyncService {
         return e.message
       })
   }
-}
+};
 
 function processShops(shops) {
   const now = new Date()

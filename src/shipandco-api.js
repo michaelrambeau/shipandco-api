@@ -23,11 +23,11 @@ const key = `MONGO_URL_${dbEnv.toUpperCase()}`
 const url = process.env[key]
 if (!url) throw new Error(`No env. variable '${key}'`)
 console.log('Connecting to MongoDB', key)
-mongoose.connect(url)
+mongoose.connect(url, { useMongoClient: true })
 
 const dbAdminUserUrl = process.env.MONGO_URL_ADMIN_USERS
 if (!dbAdminUserUrl) throw new Error('No Admin user database specified!')
-const dbAdminUserConnection = mongoose.createConnection(dbAdminUserUrl)
+const dbAdminUserConnection = mongoose.createConnection(dbAdminUserUrl, { useMongoClient: true });
 
 // Initialize the application
 const app = feathers()
@@ -39,17 +39,9 @@ const app = feathers()
   .use(bodyParser.urlencoded({ extended: true }))
   .use('/', feathers.static(path.resolve(__dirname, '..', 'public')))
 
-// Global hook (applies to all services) to protect all routes
-// Must be called BEFORE starting all the services.
-// app.mixins.push(function (service) {
-//   service.before(commonHooks().before)
-// })
-
 startServices(app, {
   dbAdminUserConnection
 })
-
-// app.before(commonHooks.before)
 
 app.use(errorHandler())
 
