@@ -5,11 +5,13 @@ const path = require('path')
 const feathers = require('feathers')
 const rest = require('feathers-rest')
 const hooks = require('feathers-hooks')
+const auth = require('feathers-authentication')
 const bodyParser = require('body-parser')
 const errorHandler = require('feathers-errors/handler')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
+const jwt = require('feathers-authentication-jwt')
 
 // Application services
 const startServices = require('./services')
@@ -25,11 +27,6 @@ if (!url) throw new Error(`No env. variable '${key}'`)
 console.log('Connecting to MongoDB', key)
 mongoose.connect(url, { useMongoClient: true })
 
-const dbAdminUserUrl = process.env.MONGO_URL_ADMIN_USERS
-if (!dbAdminUserUrl) throw new Error('No Admin user database specified!')
-const dbAdminUserConnection = mongoose.createConnection(dbAdminUserUrl, { useMongoClient: true });
-
-// Initialize the application
 const app = feathers()
   .configure(rest())
   .configure(hooks())
@@ -37,11 +34,10 @@ const app = feathers()
   .use(cookieParser())
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
+  .configure(auth({ secret: 'super secret' }))
   .use('/', feathers.static(path.resolve(__dirname, '..', 'public')))
-
-startServices(app, {
-  dbAdminUserConnection
-})
+  .configure(jwt({ service: 'staff-users' }))
+startServices(app)
 
 app.use(errorHandler())
 

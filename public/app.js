@@ -1,6 +1,6 @@
 /* globals feathers */
 
-window.authenticate = function () {
+window.authenticate = function() {
   const host = ''
   const app = feathers()
     .configure(feathers.rest(host).fetch(window.fetch))
@@ -8,12 +8,12 @@ window.authenticate = function () {
     .configure(feathers.authentication({ storage: window.localStorage }))
 
   // authenticate using your JWT that was passed in the short lived cookie
-  app.authenticate()
-    .then(function (result) {
+  app
+    .authenticate()
+    .then(function(result) {
       console.info('Authenticated!', result)
-      console.log('Your JWT is: ' + app.get('token'))
     })
-    .catch(function (error) {
+    .catch(function(error) {
       console.error('Error authenticating!', error)
     })
 

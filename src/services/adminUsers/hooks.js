@@ -1,5 +1,6 @@
 const hooks = require('feathers-hooks')
 const auth = require('feathers-authentication').hooks
+console.log(auth)
 
 const canUserRegister = require('./canUserRegister')
 
