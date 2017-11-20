@@ -1,3 +1,4 @@
+/* Run `auth-server` to check the authentication feature */
 require('dotenv').config({ silent: true })
 const path = require('path')
 const feathers = require('feathers')
@@ -18,11 +19,16 @@ const createAuth0Service = require('./src/services/auth0')
 const app = feathers()
   .configure(rest())
   .configure(hooks())
-  .use(bodyParser.json())
-  .use(bodyParser.urlencoded({ extended: true }))
   .use(cors())
   .use(cookieParser())
-  .configure(auth({ secret: 'super secret' }))
+  .use(bodyParser.json())
+  .use(bodyParser.urlencoded({ extended: true }))
+  .configure(
+    auth({
+      secret: process.env.TOKEN_SECRET,
+      cookie: { enabled: true }
+    })
+  )
   .use(errorHandler())
   .use('/', feathers.static(path.resolve(process.cwd(), 'public')))
   .configure(jwt({ service: 'staff-users' }))

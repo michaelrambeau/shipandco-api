@@ -22,6 +22,14 @@ function createService({ app }) {
   // Redirect the user to the single-page application "forwarding" the auth token
   app.get('/auth/success', (req, res) => {
     const origin = req.cookies && req.cookies[WEB_CLIENT_COOKIE]
+    debug(
+      'Auth Success!',
+      req.cookies,
+      req.query,
+      req.params,
+      req.url,
+      req.user
+    )
     if (origin) {
       //  if there is a cookie that contains the URL source, redirect the user to this URL
       const token = req.cookies['feathers-jwt']
@@ -31,6 +39,13 @@ function createService({ app }) {
       // otherwise send the static page on the same domain.
       res.sendFile(path.resolve(process.cwd(), 'public', 'success.html'))
     }
+  })
+  app.post('/auth/token', async (req, res) => {
+    const token = req.body.token
+    debug('Verifying the token', token)
+    const result = await app.passport.verifyJWT(token) // do not work? `secret must provided` error
+    debug('Result', result)
+    res.send(result)
   })
   app.configure(
     oauth2({
@@ -42,8 +57,9 @@ function createService({ app }) {
       clientSecret: process.env.AUTH0_SECRET,
       scope: ['public_profile', 'email'],
       service: 'staff-users',
-      successRedirect: '/auth/success'
-      // callbackURL: 'https://shipandco-api-v1.now.sh/auth/auth0/callback'
+      // entity: 'staff-user',
+      successRedirect: '/auth/success',
+      callbackURL: '/auth/auth0/callback'
     })
   )
 }

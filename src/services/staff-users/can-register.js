@@ -26,7 +26,6 @@ const EMAIL_DOMAIN = 'bentoandco.com'
 module.exports = function canUserRegister(hooks) {
   const { data } = hooks
   const email = get(data, 'auth0.profile.emails[0].value')
-  debug('Auth0', data.auth0.profile)
   debug('Checking', email)
   if (!isValidEmailAddress(email))
     throw new Error(`Only ${EMAIL_DOMAIN} users can access this application!`)
