@@ -1,4 +1,6 @@
 const get = require('lodash.get')
+const errors = require('feathers-errors')
+
 /*
 Example of `data` object:
 { auth0Id: 'google-oauth2|**************',
@@ -27,8 +29,12 @@ module.exports = function canUserRegister(hooks) {
   const { data } = hooks
   const email = get(data, 'auth0.profile.emails[0].value')
   debug('Checking', email)
-  if (!isValidEmailAddress(email))
-    throw new Error(`Only ${EMAIL_DOMAIN} users can access this application!`)
+  if (!isValidEmailAddress(email)) {
+    debug('Access denied!', email)
+    throw new errors.NotAuthenticated(
+      `Only ${EMAIL_DOMAIN} users can access this application!`
+    )
+  }
   debug('Access allowed', email)
 }
 

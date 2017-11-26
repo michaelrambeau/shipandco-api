@@ -1,12 +1,17 @@
-const memory = require('feathers-memory')
-const debug = require('debug')('api')
+/*
+A very simple service to store users who access the application
+We need pesistence because the JWT token is somehow linked to a given userId.
+We could use a `memory` service but users would have to renew the token everytime the server restarts.
+*/
 
-const hooks = require('./hooks')
+// const memory = require('feathers-memory')
+const service = require('feathers-nedb')
+const NeDB = require('nedb')
 
-const createService = ({ app, name }) => {
-  debug(`Create the "${name}" service`, hooks)
-  app.service(name, memory())
-  app.service(name).before(hooks)
-}
+const db = new NeDB({
+  filename: './db-data/staff-users.json',
+  autoload: true
+})
 
-module.exports = createService
+module.exports = service({ Model: db })
+// module.exports = memory()

@@ -3,6 +3,7 @@ const auth = require('feathers-authentication')
 const Auth0Strategy = require('passport-auth0').Strategy
 const debug = require('debug')('api')
 const path = require('path')
+const get = require('lodash.get')
 
 const WEB_CLIENT_COOKIE = 'web-client-url'
 
@@ -40,12 +41,33 @@ function createService({ app }) {
       res.sendFile(path.resolve(process.cwd(), 'public', 'success.html'))
     }
   })
+  // end-point used by Feasther legacy client to check if a user is authenticated
   app.post('/auth/token', async (req, res) => {
-    const token = req.body.token
-    debug('Verifying the token', token)
-    const result = await app.passport.verifyJWT(token) // do not work? `secret must provided` error
-    debug('Result', result)
-    res.send(result)
+    try {
+      const token = req.body.token
+      debug('Verifying the token', token)
+      const secret = app.get('auth').secret
+      const result = await app.passport.verifyJWT(token, { secret })
+      debug('Token Verification result', result)
+      const { userId } = result
+      if (!userId && userId !== 0) throw new Error('No user id!')
+      const user = await app.service('staff-users').get(userId)
+      if (!user) throw new Error(`No user found "${userId}"`)
+      debug('User found', user)
+      const json = {
+        token,
+        data: {
+          auth0Id: user.auth0Id,
+          auth0: {
+            email: get(user, 'auth0.profile.emails[0].value'),
+            name: get(user, 'auth0.profile.displayName')
+          }
+        }
+      }
+      res.send(json)
+    } catch (err) {
+      res.status(401).send({ message: err.message })
+    }
   })
   app.configure(
     oauth2({
@@ -57,11 +79,20 @@ function createService({ app }) {
       clientSecret: process.env.AUTH0_SECRET,
       scope: ['public_profile', 'email'],
       service: 'staff-users',
-      // entity: 'staff-user',
+      entity: 'user',
       successRedirect: '/auth/success',
-      callbackURL: '/auth/auth0/callback'
+      callbackURL: '/auth/auth0/callback',
+      connection: 'google-oauth2' // auth0 settings to avoid the provider selection step
     })
   )
+
+  // Needed to make `userId` available in `verifyJWT` response
+  app.service('authentication').hooks({
+    before: {
+      create: [auth.hooks.authenticate(['jwt', 'staff-users'])],
+      remove: [auth.hooks.authenticate('jwt')]
+    }
+  })
 }
 
 module.exports = createService
