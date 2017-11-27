@@ -9,7 +9,7 @@ const checkSyncService = require('./check-sync')
 const createBillingService = require('./payments')
 const statsService = require('./stats')
 const addressesService = require('./addresses')
-const staffService = require('./staff-users')
+const createStaffService = require('./staff-users')
 const staffServiceHooks = require('./staff-users/hooks')
 const createAuth0Service = require('./auth0')
 const debug = require('debug')('api')
@@ -21,7 +21,7 @@ function startServices(app) {
   const billingService = createBillingService(token)
 
   const services = {
-    '/staff-users': staffService,
+    '/staff-users': createStaffService(),
     '/customers': customersService,
     '/orders': ordersService,
     '/shipments': shipmentsService,
@@ -34,6 +34,7 @@ function startServices(app) {
   }
 
   // Register all REST services
+  debug('Start the services', Object.keys(services))
   Object.keys(services).forEach(key => {
     app.use(key, services[key])
   })

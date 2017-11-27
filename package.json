@@ -18,7 +18,7 @@
     "list": "forever list",
     "dev": "DEBUG=api nodemon ./src/shipandco-api.js --watch src/",
     "deploy:dev":
-      "now -e NODE_ENV=production -e MONGO_URL_SANDBOX=@shipandco_dev_mongo_url -e AUTH0_SECRET=@shipandco_auth0_secret -e AUTH0_ID=@shipandco_auth0_id -e TOKEN_SECRET=@shipandco_token_secret",
+      "now -e NODE_ENV=production -e MONGO_URL_SANDBOX=@shipandco_dev_mongo_url -e AUTH0_SECRET=@shipandco_auth0_secret -e AUTH0_ID=@shipandco_auth0_id -e TOKEN_SECRET=@shipandco_token_secret -e DEBUG=api",
     "deploy:prod":
       "now -e NODE_ENV=production -e DB_ENV=production -e MONGO_URL_PRODUCTION=@shipandco_prod_mongo_url -e MONGO_URL_ADMIN_USERS=@shipandco_admin_mongo_url -e AUTH0_SECRET=@shipandco_auth0_secret -e AUTH0_ID=@shipandco_auth0_id -e TOKEN_SECRET=@shipandco_token_secret"
   },
