@@ -12,10 +12,11 @@ const addressesService = require('./addresses')
 const createStaffService = require('./staff-users')
 const staffServiceHooks = require('./staff-users/hooks')
 const createAuth0Service = require('./auth0')
+const kpiService = require('./kpi')
 const debug = require('debug')('api')
 
 function startServices(app) {
-  const auth0Service = createAuth0Service({ app })
+  createAuth0Service({ app })
   const dbEnv = process.env.DB_ENV || 'SANDBOX'
   const token = process.env[`STRIPE_TOKEN_${dbEnv.toUpperCase()}`]
   const billingService = createBillingService(token)
@@ -40,6 +41,7 @@ function startServices(app) {
   })
 
   app.use('/check-sync', checkBatchToken, checkSyncService)
+  app.use('/kpi', kpiService)
 
   // Register common hooks to restrict access to authenticated users
   const commonHooks = {
