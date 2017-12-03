@@ -3,7 +3,9 @@
   "description": "Shipandco API built with Feathers",
   "version": "0.1.0",
   "main": "src/shipandco-api.js",
-  "keywords": ["feathers"],
+  "keywords": [
+    "feathers"
+  ],
   "license": "MIT",
   "repository": {},
   "author": "Michael Rambeau",
@@ -12,15 +14,12 @@
   },
   "scripts": {
     "start": "node ./src/shipandco-api.js",
-    "production":
-      "DB_ENV=production forever start ./src/shipandco-api.js -l forever-log.txt",
+    "production": "DB_ENV=production forever start ./src/shipandco-api.js -l forever-log.txt",
     "stop": "forever stopall",
     "list": "forever list",
     "dev": "DEBUG=api nodemon ./src/shipandco-api.js --watch src/",
-    "deploy:dev":
-      "now -e NODE_ENV=production -e MONGO_URL_SANDBOX=@shipandco_dev_mongo_url -e AUTH0_SECRET=@shipandco_auth0_secret -e AUTH0_ID=@shipandco_auth0_id -e TOKEN_SECRET=@shipandco_token_secret -e DEBUG=api",
-    "deploy:prod":
-      "now -e NODE_ENV=production -e DB_ENV=production -e MONGO_URL_PRODUCTION=@shipandco_prod_mongo_url -e MONGO_URL_ADMIN_USERS=@shipandco_admin_mongo_url -e AUTH0_SECRET=@shipandco_auth0_secret -e AUTH0_ID=@shipandco_auth0_id -e TOKEN_SECRET=@shipandco_token_secret"
+    "deploy:dev": "now -e NODE_ENV=production -e MONGO_URL_SANDBOX=@shipandco_dev_mongo_url -e AUTH0_SECRET=@shipandco_auth0_secret -e AUTH0_ID=@shipandco_auth0_id -e TOKEN_SECRET=@shipandco_token_secret -e DEBUG=api",
+    "deploy:prod": "now -e NODE_ENV=production -e DB_ENV=production -e MONGO_URL_PRODUCTION=@shipandco_prod_mongo_url -e MONGO_URL_ADMIN_USERS=@shipandco_admin_mongo_url -e AUTH0_SECRET=@shipandco_auth0_secret -e AUTH0_ID=@shipandco_auth0_id -e TOKEN_SECRET=@shipandco_token_secret"
   },
   "dependencies": {
     "body-parser": "^1.15.0",
@@ -40,6 +39,7 @@
     "feathers-rest": "1.7.2",
     "forever": "^0.15.3",
     "fs-extra": "^4.0.0",
+    "lodash.flow": "^3.5.0",
     "lodash.get": "^4.4.2",
     "lodash.mapvalues": "^4.6.0",
     "mongoose": "4.11.7",

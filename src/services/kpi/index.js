@@ -9,11 +9,11 @@ const requests = {
 
 class KPIService {
   find(params) {
-    debug('KPI request', params)
+    debug('KPI request', params.query)
     const { query } = params
     const { type } = query
     const fetchData = requests[type] || fetchShipmentsByMonth
-    return fetchData()
+    return fetchData(query).then(results => ({ results }))
     // return Promise.resolve({ msg: 'OK' })
   }
 }

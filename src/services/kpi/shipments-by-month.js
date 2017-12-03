@@ -1,16 +1,34 @@
 const Shipment = require('../shipments/Shipment')
+const flow = require('lodash.flow')
+// const debug = require('debug')('api')
 
-function fetchShipmentsByMonth() {
+function fetchShipmentsByMonth(query) {
+  const { carrier, user } = query
+  const isSet = value => value && value !== '*'
   const $project = {
     year: { $year: '$date' },
-    month: { $month: '$date' }
+    month: { $month: '$date' },
+    carrier: '$shipment_infos.carrier',
+    user: '$userId'
   }
 
+  const $match = flow([
+    _ => (isSet(user) ? Object.assign({}, _, { user: user }) : _),
+    _ => (isSet(carrier) ? Object.assign({}, _, { carrier: carrier }) : _)
+  ])({
+    year: { $gte: 2017 }
+  })
+
+  const _id = flow([
+    _ => (isSet(carrier) ? Object.assign({}, _, { carrier: '$carrier' }) : _),
+    _ => (isSet(user) ? Object.assign({}, _, { user: '$user' }) : _)
+  ])({
+    year: '$year',
+    month: '$month'
+  })
+
   const $group = {
-    _id: {
-      year: '$year',
-      month: '$month'
-    },
+    _id,
     count: { $sum: 1 }
   }
 
@@ -18,20 +36,28 @@ function fetchShipmentsByMonth() {
 
   const pipeline = [
     // { $match: { state: { $ne: 'void' } } },
-    { $match: { date: { $gte: new Date('2017-01-01T00:00:00.000Z') } } },
     { $project },
+    { $match },
     { $group },
     { $sort }
   ]
-  return Shipment.aggregate(pipeline)
-  // .toArray()
-  // .reduce(
-  //   (acc, item) =>
-  //     Object.assign({}, acc, {
-  //       [`${item._id.carrier}/${item._id.method}`]: item.count
-  //     }),
-  //   {}
-  // )
+  return Shipment.aggregate(pipeline).then(formatResults)
+}
+
+// function formatResults(results) {
+//   return results.reduce(
+//     (acc, item) =>
+//       Object.assign({}, acc, {
+//         [`${item._id.year}/${item._id.month}`]: item.count
+//       }),
+//     {}
+//   )
+// }
+function formatResults(results) {
+  return results.map(item => ({
+    date: `${item._id.year}/${item._id.month}`,
+    count: item.count
+  }))
 }
 
 module.exports = fetchShipmentsByMonth
