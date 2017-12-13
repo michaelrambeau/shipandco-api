@@ -3,25 +3,28 @@ const flow = require('lodash.flow')
 // const debug = require('debug')('api')
 
 function fetchShipmentsByMonth(query) {
-  const { carrier, user } = query
+  const { carrier, user, shop } = query
   const isSet = value => value && value !== '*'
   const $project = {
     year: { $year: '$date' },
     month: { $month: '$date' },
     carrier: '$shipment_infos.carrier',
-    user: '$userId'
+    user: '$userId',
+    shop: '$type'
   }
 
   const $match = flow([
     _ => (isSet(user) ? Object.assign({}, _, { user: user }) : _),
-    _ => (isSet(carrier) ? Object.assign({}, _, { carrier: carrier }) : _)
+    _ => (isSet(carrier) ? Object.assign({}, _, { carrier: carrier }) : _),
+    _ => (isSet(shop) ? Object.assign({}, _, { shop: shop }) : _)
   ])({
     year: { $gte: 2017 }
   })
 
   const _id = flow([
     _ => (isSet(carrier) ? Object.assign({}, _, { carrier: '$carrier' }) : _),
-    _ => (isSet(user) ? Object.assign({}, _, { user: '$user' }) : _)
+    _ => (isSet(user) ? Object.assign({}, _, { user: '$user' }) : _),
+    _ => (isSet(shop) ? Object.assign({}, _, { shop: '$shop' }) : _)
   ])({
     year: '$year',
     month: '$month'
