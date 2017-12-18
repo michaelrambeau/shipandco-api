@@ -57,7 +57,9 @@ class CustomerService extends Service {
   }
   get(id, params) {
     const getUser = () =>
-      CustomerModel.findOne({ _id: id }).select({ signature: 0 }).lean()
+      CustomerModel.findOne({ _id: id })
+        .select({ signature: 0, logo: 0 })
+        .lean()
     const getOrderCount = () =>
       OrderModel.count({
         userId: id,
@@ -78,23 +80,29 @@ class CustomerService extends Service {
           'data.total_price': 1
         })
     const getShipmentList = () =>
-      ShipmentModel.find({ userId: id }).limit(50).sort({ date: -1 }).select(
-        shipmentFields.reduce(
-          (acc, field) =>
-            Object.assign({}, acc, {
-              [field]: 1
-            }),
-          {}
+      ShipmentModel.find({ userId: id })
+        .limit(50)
+        .sort({ date: -1 })
+        .select(
+          shipmentFields.reduce(
+            (acc, field) =>
+              Object.assign({}, acc, {
+                [field]: 1
+              }),
+            {}
+          )
         )
-      )
     const getShopList = () =>
-      ShopModel.find({ userId: id }).limit(50).sort({ date: -1 }).select({
-        name: 1,
-        type: 1,
-        created_at: 1,
-        lastSync: 1,
-        'settings.autofulfill': 1
-      })
+      ShopModel.find({ userId: id })
+        .limit(50)
+        .sort({ date: -1 })
+        .select({
+          name: 1,
+          type: 1,
+          created_at: 1,
+          lastSync: 1,
+          'settings.autofulfill': 1
+        })
     const getWarehouseList = () => WarehouseModel.find({ userId: id })
     const fetchBasicData = [getUser(), getShopList()]
     const onlyBasicData = params.options && params.options.basic
