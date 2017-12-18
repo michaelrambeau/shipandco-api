@@ -17,6 +17,7 @@ class ShopsService extends MongooseService {
     const getShipments = shopId =>
       ShipmentsService.find({ query: { shopId, $limit: 10 } })
     const getWarehouse = _id =>
+      _id &&
       WarehousesService.get(_id).catch(e => {
         if (e.name === 'NotFound')
           return Promise.resolve({ _id, deleted: true })
