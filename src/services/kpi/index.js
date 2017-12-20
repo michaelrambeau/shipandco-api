@@ -13,8 +13,9 @@ const requests = {
 function fetchAll(query) {
   return Promise.all([
     fetchShipmentsByMonth(query),
-    fetchShipmentsByDay(query)
-  ]).then(([byMonth, byDay]) => ({ byMonth, byDay }))
+    fetchShipmentsByDay(query),
+    fetchShipmentsByMethod(query)
+  ]).then(([byMonth, byDay, byMethod]) => ({ byMonth, byDay, byMethod }))
 }
 
 class KPIService {

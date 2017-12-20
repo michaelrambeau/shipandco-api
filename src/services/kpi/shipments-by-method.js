@@ -1,37 +1,55 @@
+const flow = require('lodash.flow')
+const debug = require('debug')('api')
+
 const Shipment = require('../shipments/Shipment')
 
-function fetchShipmentsByMethod() {
+function fetchShipmentsByMethod(query) {
+  const { carrier, user, shop } = query
+  debug({ query })
+  const isSet = value => value && value !== '*'
   const $project = {
-    'shipment_infos.method': 1,
-    'shipment_infos.carrier': 1
+    year: { $year: '$date' },
+    method: '$shipment_infos.method',
+    carrier: '$shipment_infos.carrier',
+    user: '$userId',
+    shop: '$type'
   }
 
+  const _id = flow([
+    _ => (isSet(carrier) ? Object.assign({}, _, { carrier: '$carrier' }) : _),
+    _ => (isSet(user) ? Object.assign({}, _, { user: '$user' }) : _),
+    _ => (isSet(shop) ? Object.assign({}, _, { shop: '$shop' }) : _)
+  ])({
+    carrier: '$carrier',
+    method: '$method'
+  })
+
   const $group = {
-    _id: {
-      method: '$shipment_infos.method',
-      carrier: '$shipment_infos.carrier'
-    },
+    _id,
     count: { $sum: 1 }
   }
 
   const $sort = { count: -1 }
 
-  const pipeline = [
-    { $match: { state: { $ne: 'void' } } },
-    { $project },
-    { $group },
-    { $sort }
-  ]
+  const $match = flow([
+    _ => (isSet(user) ? Object.assign({}, _, { user: user }) : _),
+    _ => (isSet(carrier) ? Object.assign({}, _, { carrier: carrier }) : _),
+    _ => (isSet(shop) ? Object.assign({}, _, { shop: shop }) : _)
+  ])({
+    year: { $gte: 2017 }
+  })
 
-  return Shipment.aggregate(pipeline)
-  // .toArray()
-  // .reduce(
-  //   (acc, item) =>
-  //     Object.assign({}, acc, {
-  //       [`${item._id.carrier}/${item._id.method}`]: item.count
-  //     }),
-  //   {}
-  // )
+  const pipeline = [{ $project }, { $match }, { $group }, { $sort }]
+
+  return Shipment.aggregate(pipeline).then(formatResults)
+}
+
+function formatResults(results) {
+  return results.map(item => ({
+    carrier: item._id.carrier,
+    method: item._id.method,
+    count: item.count
+  }))
 }
 
 module.exports = fetchShipmentsByMethod
