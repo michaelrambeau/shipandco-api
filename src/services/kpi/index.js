@@ -1,13 +1,19 @@
 const debug = require('debug')('api')
+const mem = require('mem')
+
 const fetchShipmentsByMonth = require('./shipments-by-month')
 const fetchShipmentsByMethod = require('./shipments-by-method')
 const fetchShipmentsByDay = require('./shipments-by-day')
 
+const memOptions = { maxAge: 60 * 60 * 1000 } // 1 hours until the cache expires (in ms)
+
+const memoize = fn => mem(fn, memOptions)
+
 const requests = {
-  'by-month': fetchShipmentsByMonth,
-  'by-method': fetchShipmentsByMethod,
-  'by-day': fetchShipmentsByDay,
-  all: fetchAll
+  'by-month': memoize(fetchShipmentsByMonth),
+  'by-method': memoize(fetchShipmentsByMethod),
+  'by-day': memoize(fetchShipmentsByDay),
+  all: memoize(fetchAll)
 }
 
 function fetchAll(query) {
@@ -19,13 +25,14 @@ function fetchAll(query) {
 }
 
 class KPIService {
-  find(params) {
+  async find(params) {
     debug('KPI request', params.query)
     const { query } = params
     const { type } = query
     const fetchData = requests[type] || fetchShipmentsByMonth
-    return fetchData(query).then(results => ({ results }))
-    // return Promise.resolve({ msg: 'OK' })
+    const results = await fetchData(query).then(results => ({ results }))
+    debug('Result OK!')
+    return results
   }
 }
 
