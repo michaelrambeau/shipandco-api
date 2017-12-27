@@ -31,7 +31,8 @@ function startServices(app) {
     '/warehouses': warehousesService,
     '/payments': billingService,
     '/addresses': addressesService,
-    '/stats': statsService
+    '/stats': statsService,
+    '/kpi': kpiService
   }
 
   // Register all REST services
@@ -41,7 +42,6 @@ function startServices(app) {
   })
 
   app.use('/check-sync', checkBatchToken, checkSyncService)
-  app.use('/kpi', kpiService)
 
   // Register common hooks to restrict access to authenticated users
   const commonHooks = {
