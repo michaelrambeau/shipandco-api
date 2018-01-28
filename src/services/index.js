@@ -32,7 +32,8 @@ function startServices(app) {
     '/payments': billingService,
     '/addresses': addressesService,
     '/stats': statsService,
-    '/kpi': kpiService
+    '/kpi/shipments': kpiService.shipments,
+    '/kpi/customers': kpiService.customers
   }
 
   // Register all REST services

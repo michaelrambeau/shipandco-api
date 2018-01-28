@@ -1,9 +1,8 @@
-const Shipment = require('../shipments/Shipment')
 const flow = require('lodash.flow')
 const subDays = require('date-fns/sub_days')
 // const debug = require('debug')('api')
 
-function fetchShipmentsByDay(query) {
+function fetchShipmentsByDay({ Shipment, query }) {
   const today = new Date()
   const fromDate = subDays(today, 31)
   const { carrier, user, shop } = query

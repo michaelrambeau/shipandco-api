@@ -38,7 +38,8 @@ const fields = {
 }
 
 const schema = new Schema(fields, {
-  collection: 'users'
+  // collection: 'users'
+  collection: 'customers'
 })
 
 // schema.virtual('lastLogin').get(function () {

@@ -1,9 +1,7 @@
 const flow = require('lodash.flow')
 // const debug = require('debug')('api')
 
-const Shipment = require('../shipments/Shipment')
-
-function fetchShipmentsByMethod(query) {
+function fetchShipmentsByMethod({ Shipment, query }) {
   const { carrier, user, shop } = query
   const isSet = value => value && value !== '*'
   const $project = {

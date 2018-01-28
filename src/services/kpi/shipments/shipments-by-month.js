@@ -1,9 +1,8 @@
-const Shipment = require('../shipments/Shipment')
 const flow = require('lodash.flow')
 var subYears = require('date-fns/sub_years')
 // const debug = require('debug')('api')
 
-function fetchShipmentsByMonth(query) {
+function fetchShipmentsByMonth({ Shipment, query }) {
   const now = new Date()
   const oneYearAgo = subYears(now, 1)
   const startDate = new Date(oneYearAgo.getFullYear(), oneYearAgo.getMonth(), 1)
