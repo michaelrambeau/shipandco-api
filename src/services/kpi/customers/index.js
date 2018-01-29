@@ -10,8 +10,12 @@ const requests = {
 }
 
 function fetchAll(query) {
-  return Promise.all([fetchCustomersByMonth(query)]).then(([byMonth]) => ({
-    byMonth
+  return Promise.all([
+    fetchCustomersByMonth(query),
+    fetchPaidCustomersByMonth(query)
+  ]).then(([byMonth, paid]) => ({
+    byMonth,
+    paid
   }))
 }
 
@@ -21,11 +25,9 @@ class KPIService {
     const { query } = params
     const { type } = query
     const fetchData = requests[type] || fetchCustomersByMonth
-    const results = await fetchData({ Customer, query }).then(results => ({
+    return fetchData({ Customer, query }).then(results => ({
       results
     }))
-    debug('Result OK!')
-    return results
   }
 }
 

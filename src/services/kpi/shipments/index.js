@@ -31,11 +31,9 @@ class KPIService {
     const { query } = params
     const { type } = query
     const fetchData = requests[type] || fetchShipmentsByMonth
-    const results = await fetchData({ Shipment, query }).then(results => ({
+    return fetchData({ Shipment, query }).then(results => ({
       results
     }))
-    debug('Result OK!')
-    return results
   }
 }
 
