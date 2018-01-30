@@ -30,7 +30,7 @@ class KPIService {
     debug('KPI request', params.query)
     const { query } = params
     const { type } = query
-    const fetchData = requests[type] || fetchShipmentsByMonth
+    const fetchData = requests[type] || requests['all']
     return fetchData({ Shipment, query }).then(results => ({
       results
     }))
