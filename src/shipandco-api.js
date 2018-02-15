@@ -12,7 +12,7 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const jwt = require('feathers-authentication-jwt')
-const pingRequestHandler = require('./services/ping')
+const pingRequestHandler = require('./services/hyperping')
 
 // Application services
 const startServices = require('./services')
