@@ -40,6 +40,7 @@
     "feathers-rest": "1.7.2",
     "forever": "^0.15.3",
     "fs-extra": "^4.0.0",
+    "got": "^8.0.3",
     "lodash.flow": "^3.5.0",
     "lodash.get": "^4.4.2",
     "lodash.mapvalues": "^4.6.0",

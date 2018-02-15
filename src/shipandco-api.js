@@ -12,6 +12,7 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const jwt = require('feathers-authentication-jwt')
+const pingRequestHandler = require('./services/ping')
 
 // Application services
 const startServices = require('./services')
@@ -42,6 +43,7 @@ const app = feathers()
   )
   .use('/', feathers.static(path.resolve(process.cwd(), 'public')))
   .configure(jwt({ service: 'staff-users' }))
+  .post('/ping', pingRequestHandler)
 startServices(app)
 
 app.use(errorHandler())
