@@ -1,4 +1,4 @@
-# Ping service
+# Hyperping service
 
 We use https://hyperping.io/ to check periodically whether the Shipandco web application is up and running.
 

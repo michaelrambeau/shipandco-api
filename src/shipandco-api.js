@@ -43,7 +43,7 @@ const app = feathers()
   )
   .use('/', feathers.static(path.resolve(process.cwd(), 'public')))
   .configure(jwt({ service: 'staff-users' }))
-  .post('/ping', pingRequestHandler)
+  .post('/hyperping', pingRequestHandler)
 startServices(app)
 
 app.use(errorHandler())
