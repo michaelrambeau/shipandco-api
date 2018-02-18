@@ -5,11 +5,11 @@ function fetchShipmentsByMethod({ Shipment, query }) {
   const { carrier, user, shop } = query
   const isSet = value => value && value !== '*'
   const $project = {
-    year: { $year: '$date' },
-    method: '$shipment_infos.method',
-    carrier: '$shipment_infos.carrier',
-    user: '$userId',
-    shop: '$type'
+    year: { $year: '$meta.created_at' },
+    method: '$delivery.method',
+    carrier: '$delivery.carrier',
+    user: '$meta.user_id',
+    shop: '$meta.type'
   }
 
   const _id = flow([

@@ -18,7 +18,7 @@ function findByUser(query) {
     .sort('-date')
     .skip(skip)
     .limit(limit)
-    .select(fieldHashMap)
+  // .select(fieldHashMap)
   const getTotal = Model.count({ userId }).hint({ userId: 1, date: -1 })
   return Promise.all([getShipments, getTotal]).then(([shipments, total]) => ({
     limit,
@@ -60,7 +60,7 @@ function findByCarrier(query) {
 class ShipmentsService extends MongooseService {
   find(params) {
     const $select = fields
-    const defaultOptions = { $sort: '-date' }
+    const defaultOptions = { $sort: '-meta.created_at' }
     const query = Object.assign({}, defaultOptions, params.query, {
       $select
     })

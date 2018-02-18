@@ -15,14 +15,14 @@ const formatItem = item => ({
 })
 
 function topUsers(Model) {
-  const $project = { userId: 1, date: 1 }
+  const $project = { 'meta.user_id': 1, 'meta.created_at': 1 }
 
   const agg = Model.aggregate([
     { $project },
     {
       $group: {
-        _id: { userId: '$userId' },
-        lastShipment: { $last: '$date' },
+        _id: { userId: '$meta.user_id' },
+        lastShipment: { $last: '$meta.created_at' },
         count: { $sum: 1 }
       }
     },

@@ -7,7 +7,8 @@ const WarehousesService = require('../warehouses')
 
 class ShopsService extends MongooseService {
   find(params) {
-    params.query = Object.assign({}, params.query, {})
+    const $select = ['meta', 'settings']
+    params.query = Object.assign({}, params.query, { $select })
     return super.find(params)
   }
   get(id, params) {

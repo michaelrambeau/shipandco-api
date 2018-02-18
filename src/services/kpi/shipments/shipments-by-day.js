@@ -4,17 +4,17 @@ const subDays = require('date-fns/sub_days')
 
 function fetchShipmentsByDay({ Shipment, query }) {
   const today = new Date()
-  const fromDate = subDays(today, 31)
+  const fromDate = subDays(today, 100)
   const { carrier, user, shop } = query
   const isSet = value => value && value !== '*'
   const $project = {
-    date: '$date',
-    year: { $year: '$date' },
-    month: { $month: '$date' },
-    day: { $dayOfMonth: '$date' },
-    carrier: '$shipment_infos.carrier',
-    user: '$userId',
-    shop: '$type'
+    date: '$meta.created_at',
+    year: { $year: '$meta.created_at' },
+    month: { $month: '$meta.created_at' },
+    day: { $dayOfMonth: '$meta.created_at' },
+    carrier: '$delivery.carrier',
+    user: '$meta.user_id',
+    shop: '$meta.type'
   }
 
   const $match = flow([

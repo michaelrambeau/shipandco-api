@@ -6,9 +6,9 @@ const PAGINATION_MAX = 100
 class OrdersService extends MongooseService {
   find(params) {
     params.query = Object.assign({}, params.query, {
-      state: 'active',
+      'meta.state': 'active',
       $sort: {
-        date: -1
+        'created_at.date': -1
       }
     })
     return super.find(params)

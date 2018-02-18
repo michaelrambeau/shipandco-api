@@ -6,7 +6,10 @@ const formatItem = item => {
 }
 
 function byMonth(Model) {
-  const $project = { year: { $year: '$date' }, month: { $month: '$date' } }
+  const $project = {
+    year: { $year: '$meta.created_at' },
+    month: { $month: '$meta.created_at' }
+  }
 
   const agg = Model.aggregate([
     { $project },
