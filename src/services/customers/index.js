@@ -28,12 +28,11 @@ class CustomerService extends Service {
     debug(params)
     const $select = [
       'emails',
-      'profile',
-      'carriers',
       'createdAt',
       'services',
-      'freeShipments',
-      'billing'
+      'free_shipments',
+      'billing',
+      'contact'
     ] // `services` is required to get access to lastLogin
     params.query = Object.assign({}, params.query, {
       $select
