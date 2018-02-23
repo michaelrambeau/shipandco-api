@@ -7,12 +7,15 @@ const $lookup = {
   as: 'users'
 }
 
-const formatItem = item => ({
-  _id: item._id.userId,
-  email: get(item, 'users[0].emails[0].address') || '?',
-  lastShipment: item.lastShipment,
-  count: item.count
-})
+const formatItem = item => {
+  const { userId } = item._id
+  return {
+    _id: userId,
+    email: get(item, 'users[0].emails[0].address') || userId,
+    lastShipment: item.lastShipment,
+    count: item.count
+  }
+}
 
 function topUsers(Model) {
   const $project = { 'meta.user_id': 1, 'meta.created_at': 1 }
