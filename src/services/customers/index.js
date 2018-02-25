@@ -36,7 +36,9 @@ class CustomerService extends Service {
       'contact'
     ] // `services` is required to get access to lastLogin
     params.query = Object.assign({}, params.query, {
-      $select
+      $select,
+      $sort: '-createdAt',
+      $limit: 1000
     })
     return super.find(params).then(result => {
       const docs = result.data
