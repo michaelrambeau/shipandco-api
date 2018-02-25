@@ -53,7 +53,7 @@ function createService({ app }) {
       if (!userId && userId !== 0) throw new Error('No user id!')
       const user = await app.service('staff-users').get(userId)
       if (!user) throw new Error(`No user found "${userId}"`)
-      debug('User found', user)
+      debug('User found!')
       const json = {
         token,
         data: {

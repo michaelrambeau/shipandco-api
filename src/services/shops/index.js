@@ -7,16 +7,16 @@ const WarehousesService = require('../warehouses')
 
 class ShopsService extends MongooseService {
   find(params) {
-    const $select = ['meta', 'settings']
+    const $select = ['meta', 'settings', 'sync']
     params.query = Object.assign({}, params.query, { $select })
     return super.find(params)
   }
   get(id, params) {
     const getCustomer = userId => CustomerService.get(userId, { basic: true })
     const getOrders = shopId =>
-      OrdersService.find({ query: { shopId, $limit: 10 } })
+      OrdersService.find({ query: { 'meta.shop_id': shopId, $limit: 10 } })
     const getShipments = shopId =>
-      ShipmentsService.find({ query: { shopId, $limit: 10 } })
+      ShipmentsService.find({ query: { 'meta.shop_id': shopId, $limit: 10 } })
     const getWarehouse = _id =>
       _id &&
       WarehousesService.get(_id).catch(e => {
@@ -28,10 +28,10 @@ class ShopsService extends MongooseService {
       .get(id, params)
       .then(shop => {
         const promises = [
-          getCustomer(shop.userId),
+          getCustomer(shop.meta.user_id),
           getOrders(shop._id),
           getShipments(shop._id),
-          getWarehouse(shop.settings.warehouseId)
+          getWarehouse(shop.meta.warehouse_id)
         ]
         console.log('Fetching all data...')
         return Promise.all(
