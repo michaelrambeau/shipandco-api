@@ -115,9 +115,9 @@ class CustomerService extends Service {
     const onlyBasicData = params.options && params.options.basic
     const fetchAdvancedData = [
       getOrderCount(),
-      getOrderList(),
+      // getOrderList(),
       getShipmentCount(),
-      getShipmentList(),
+      // getShipmentList(),
       getWarehouseList(),
       getSettings(),
       getCarriers()
@@ -130,9 +130,9 @@ class CustomerService extends Service {
         user,
         shops,
         orderCount,
-        orders,
+        // orders,
         shipmentCount,
-        shipments,
+        // shipments,
         warehouses,
         settings,
         carriers
@@ -140,9 +140,9 @@ class CustomerService extends Service {
       return Object.assign({}, user, {
         lastLogin: helpers.getLastLogin(user),
         orderCount,
-        orders,
+        // orders,
         shipmentCount,
-        shipments,
+        // shipments,
         shops,
         warehouses,
         settings,
