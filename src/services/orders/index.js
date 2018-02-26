@@ -8,7 +8,7 @@ class OrdersService extends MongooseService {
     params.query = Object.assign({}, params.query, {
       'meta.state': 'active',
       $sort: {
-        'created_at.date': -1
+        'meta.created_at': -1
       }
     })
     return super.find(params)
