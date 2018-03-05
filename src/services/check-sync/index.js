@@ -6,19 +6,18 @@ const shopTypes = [
   'amazon',
   'base',
   'ebay',
-  'magento1',
-  'magento2',
+  'magento',
   'nextengine',
-  'prestashop15',
+  'prestashop',
   'rakuten'
 ]
 
 // Exclude shops whose token is no more valid!
 const enabledRules = {
-  ebay: (shop) => {
-    const now = new Date()
-    return shop.tokenExpiration > now
-  }
+  // ebay: shop => {
+  //   const now = new Date()
+  //   return shop.tokenExpiration > now
+  // }
 }
 
 const isSyncEnabled = shop => {
@@ -27,31 +26,33 @@ const isSyncEnabled = shop => {
 }
 
 class CheckSyncService {
-  find(params) {
+  find() {
     const query = {
-      type: {
+      'meta.type': {
         $in: shopTypes
       },
-      state: { $nin: ['pending'] }
+      'meta.state': { $nin: ['pending', 'deleted'] }
     }
     return Shop.find(query)
-      .select({ name: 1, type: 1, lastSync: 1, tokenExpiration: 1 })
-      .then(shops => processShops(shops))
+      .lean()
+      .then(processShops)
       .catch(e => {
         console.error('Error!', e)
         return e.message
       })
   }
-};
+}
 
 function processShops(shops) {
   const now = new Date()
   const minutesFromNow = date => parseInt((now - date) / 1000 / 60)
   const lastSyncByShopType = shops
     .filter(isSyncEnabled)
+    .filter(shop => !!shop.sync)
     .reduce((acc, shop) => {
-      const { lastSync, type } = shop
-      const last = minutesFromNow(lastSync)
+      const { type } = shop.meta
+      const { synced_at } = shop.sync
+      const last = minutesFromNow(synced_at)
       const oldest = acc[type] ? Math.max(last, acc[type]) : last
       return Object.assign({}, acc, {
         [type]: oldest
