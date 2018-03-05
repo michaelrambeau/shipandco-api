@@ -9,7 +9,8 @@ const last12month = shipment => new Date(shipment.date) > new Date(2017, 0, 1)
 
 class DashboardService {
   find(params) {
-    const getOrderCount = () => OrderModel.count()
+    const getOrderCount = () =>
+      OrderModel.count({ 'meta.state': { $in: ['active', 'partial'] } })
     const getCustomerCount = () => CustomerModel.count()
     const getShipmentCount = () => ShipmentModel.count()
     const getShopCount = () => ShopModel.count()
