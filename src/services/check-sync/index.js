@@ -20,6 +20,8 @@ const enabledRules = {
   // }
 }
 
+const isIncluded = shop => !shop.sync.ignore_warnings
+
 const isSyncEnabled = shop => {
   const fn = enabledRules[shop.type]
   return fn ? fn(shop) : true
@@ -47,8 +49,9 @@ function processShops(shops) {
   const now = new Date()
   const minutesFromNow = date => parseInt((now - date) / 1000 / 60)
   const lastSyncByShopType = shops
-    .filter(isSyncEnabled)
     .filter(shop => !!shop.sync)
+    .filter(isSyncEnabled)
+    .filter(isIncluded)
     .reduce((acc, shop) => {
       const { type } = shop.meta
       const { synced_at } = shop.sync
