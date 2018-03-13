@@ -24,7 +24,7 @@ const formatLineItem = line => ({
 })
 
 const formatInvoice = invoice => ({
-  id: invoice.date,
+  id: invoice.id,
   date: new Date(invoice.date * 1000),
   amount: invoice.amount_due,
   customer: invoice.customer,
@@ -60,14 +60,16 @@ const addUser = users => invoice => {
   const foundUser = users.find(
     user => user.billing.customer_id === invoice.customer
   )
-  return Object.assign({}, invoice, {
-    user: {
-      _id: foundUser._id,
-      emails: foundUser.emails,
-      contact: foundUser.contact,
-      billing: foundUser.billing
-    }
-  })
+  return foundUser
+    ? Object.assign({}, invoice, {
+        user: {
+          _id: foundUser._id,
+          emails: foundUser.emails,
+          contact: foundUser.contact,
+          billing: foundUser.billing
+        }
+      })
+    : invoice
 }
 
 async function fetchAllInvoices({ stripe, limit }) {
@@ -76,16 +78,15 @@ async function fetchAllInvoices({ stripe, limit }) {
     billing: 'charge_automatically'
   }
   const users = await fetchAllPaidUsers()
-  debug(users.map(user => user.billing.customer_id))
   debug('Fetch all invoices')
   return stripe.invoices.list(options).then(result => {
     const invoices = result.data
     debug('Invoices found', invoices.length)
     const data = invoices
       .map(formatInvoice)
-      .filter(invoice => invoice.amount > 0)
+      // .filter(invoice => invoice.amount > 0)
       .map(addUser(users))
-    debug('Invoices whose amount > 0', invoices.length)
+      .filter(invoice => !!invoice.user)
     return {
       total: data.length,
       data
